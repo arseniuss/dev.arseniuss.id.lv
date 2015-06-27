@@ -2,7 +2,8 @@
   "meta": {
     "username": "arseniuss",
     "repositoryName": "dev.arseniuss.id.lv",
-    "branch": "gh-pages"
+    "branch": "gh-pages",
+    "cname":"dev.arseniuss.id.lv"
   },
   "theme": {
     "name": "Casper"
