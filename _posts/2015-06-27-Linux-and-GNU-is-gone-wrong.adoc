@@ -1,7 +1,566 @@
 # Linux and GNU is gone wrong
 
+:hp-tags: Linux, GNU, UNIX
+
 In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use.
 
-Kernel development is the thing I'm interested in. I have delicated almost all my free time for that. And even at work when my project compiling I catch myself reading osdev.org forums and laughing at discussions about cats.
+Kernel development is the thing I'm interested in. I have dedicated almost all my free time for that. And even at work when my project compiling I catch myself reading osdev.org forums and laughing at discussions about cats. But since I got more understanding of operating system architecture in past  5 years I take it seriously. It's a core of system which we use and we will use. What could be more important than that?
 
-But since I got more understanding of operating system architecture in last past 5 years I take that seriously. 
+Long way ago before I was even born Unix founders had an idea to build system that could be easy to use, easy to maintain and also easy to read. It was build into philosophy now known as Unix philosophy that defined foundations of system that could not only do needed job but also could be easy understandable. Making the system that could be elegant not only for developer but also for user.
+
+Now it's 2015 - long way after UNIX. Now there is GNU, Linux, BSD and many other projects which have initially emerged from UNIX and it's founders. What have happened in these years?
+
+GNU have a really good bunch of tools. It have played main role for many years and have done its role well. But! Where did it go? Despite being good project it have grown with _moss_. Now its code is unreadable! OK, you can say - GNU is Not UNIX! - but its kinda is. It provides layer above kernel. That's as important as kernel itself. Shouldn't it follow good practice principles recommended by UNIX philosophy?
+
+I know that there is need for supporting a lot of features, options and hardware. But I can't agree that this is the way to do that. We have big blob of code which is either readable and either simple to use. I have mastered gcc options only recently and yet I think that a lot of that that should be put in code not in compiler options.
+
+Linux (Linus Unix) is a big blob too. It by definition should keep itself changing. If there was one inner interface for drivers it would fail reason to exist. It is - to keep hardware code open source. It's written in licence and it's defines kernel as such. It's not a bad idea for sake of surviving but it's bad idea for maintaining and building better systems. There is even discussions about when will Linux code reach such a complexity that human could not comprehend it.
+
+If you're not convince yet that there is a problem in those systems, I will show you example of simple command tool named _echo_. It purpose just to place string into terminal.
+
+In UNIX Fifth Edition
+```c
+main(argc, argv)
+int argc;
+char *argv[];
+{
+	int i;
+ 
+	argc--;
+	for(i=1; i<=argc; i++)
+		printf("%s%c", argv[i], i==argc? '\n': ' ');
+}
+```
+
+In OpenBSD
+```c
+/*	$OpenBSD: echo.c,v 1.7 2009/10/27 23:59:21 deraadt Exp $	*/
+/*	$NetBSD: echo.c,v 1.6 1995/03/21 09:04:27 cgd Exp $	*/
+ 
+/*
+ * Copyright (c) 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+ 
+/* ARGSUSED */
+int
+main(int argc, char *argv[])
+{
+	int nflag;
+ 
+	/* This utility may NOT do getopt(3) option parsing. */
+	if (*++argv && !strcmp(*argv, "-n")) {
+		++argv;
+		nflag = 1;
+	}
+	else
+		nflag = 0;
+ 
+	while (*argv) {
+		(void)fputs(*argv, stdout);
+		if (*++argv)
+			putchar(' ');
+	}
+	if (!nflag)
+		putchar('\n');
+ 
+	return 0;
+}
+```
+
+In Plan9
+```c
+#include <u.h>
+#include <libc.h>
+ 
+void
+main(int argc, char *argv[])
+{
+	int nflag;
+	int i, len;
+	char *buf, *p;
+ 
+	nflag = 0;
+	if(argc > 1 && strcmp(argv[1], "-n") == 0)
+		nflag = 1;
+ 
+	len = 1;
+	for(i = 1+nflag; i < argc; i++)
+		len += strlen(argv[i])+1;
+ 
+	buf = malloc(len);
+	if(buf == 0)
+		exits("no memory");
+ 
+	p = buf;
+	for(i = 1+nflag; i < argc; i++){
+		strcpy(p, argv[i]);
+		p += strlen(p);
+		if(i < argc-1)
+			*p++ = ' ';
+	}
+		
+	if(!nflag)
+		*p++ = '\n';
+ 
+	if(write(1, buf, p-buf) < 0){
+		fprint(2, "echo: write error: %r\n");
+		exits("write error");
+	}
+ 
+	exits((char *)0);
+}
+```
+
+In FreeBSD
+```c
+/*-
+ * Copyright (c) 1989, 1993
+ *      The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+ 
+#if 0
+#ifndef lint
+static char const copyright[] =
+"@(#) Copyright (c) 1989, 1993\n\
+        The Regents of the University of California.  All rights reserved.\n";
+#endif /* not lint */
+ 
+#ifndef lint
+static char sccsid[] = "@(#)echo.c      8.1 (Berkeley) 5/31/93";
+#endif /* not lint */
+#endif
+#include <sys/cdefs.h>
+__FBSDID("$FreeBSD$");
+ 
+#include <sys/types.h>
+#include <sys/uio.h>
+ 
+#include <assert.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+ 
+/*
+ * Report an error and exit.
+ * Use it instead of err(3) to avoid linking-in stdio.
+ */
+static __dead2 void
+errexit(const char *prog, const char *reason)
+{
+        char *errstr = strerror(errno);
+        write(STDERR_FILENO, prog, strlen(prog));
+        write(STDERR_FILENO, ": ", 2);
+        write(STDERR_FILENO, reason, strlen(reason));
+        write(STDERR_FILENO, ": ", 2);
+        write(STDERR_FILENO, errstr, strlen(errstr));
+        write(STDERR_FILENO, "\n", 1);
+        exit(1);
+}
+ 
+int
+main(int argc, char *argv[])
+{
+        int nflag;      /* if not set, output a trailing newline. */
+        int veclen;     /* number of writev arguments. */
+        struct iovec *iov, *vp; /* Elements to write, current element. */
+        char space[] = " ";
+        char newline[] = "\n";
+        char *progname = argv[0];
+ 
+        /* This utility may NOT do getopt(3) option parsing. */
+        if (*++argv && !strcmp(*argv, "-n")) {
+                ++argv;
+                --argc;
+                nflag = 1;
+        } else
+                nflag = 0;
+ 
+        veclen = (argc >= 2) ? (argc - 2) * 2 + 1 : 0;
+ 
+        if ((vp = iov = malloc((veclen + 1) * sizeof(struct iovec))) == NULL)
+                errexit(progname, "malloc");
+ 
+        while (argv[0] != NULL) {
+                size_t len;
+ 
+                len = strlen(argv[0]);
+ 
+                /*
+                 * If the next argument is NULL then this is this
+                 * the last argument, therefore we need to check
+                 * for a trailing \c.
+                 */
+                if (argv[1] == NULL) {
+                        /* is there room for a '\c' and is there one? */
+                        if (len >= 2 &&
+                            argv[0][len - 2] == '\\' &&
+                            argv[0][len - 1] == 'c') {
+                                /* chop it and set the no-newline flag. */
+                                len -= 2;
+                                nflag = 1;
+                        }
+                }
+                vp->iov_base = *argv;
+                vp++->iov_len = len;
+                if (*++argv) {
+                        vp->iov_base = space;
+                        vp++->iov_len = 1;
+                }
+        }
+        if (!nflag) {
+                veclen++;
+                vp->iov_base = newline;
+                vp++->iov_len = 1;
+        }
+        /* assert(veclen == (vp - iov)); */
+        while (veclen) {
+                int nwrite;
+ 
+                nwrite = (veclen > IOV_MAX) ? IOV_MAX : veclen;
+                if (writev(STDOUT_FILENO, iov, nwrite) == -1)
+                        errexit(progname, "write");
+                iov += nwrite;
+                veclen -= nwrite;
+        }
+        return 0;
+}
+```
+
+In GNU coreutils
+```c
+/* echo.c, derived from code echo.c in Bash.
+   Copyright (C) 1987, 1989, 1991-1997, 1999-2005, 2007-2011 Free Software
+   Foundation, Inc.
+ 
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+ 
+#include <config.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include "system.h"
+ 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "echo"
+ 
+#define AUTHORS \
+  proper_name ("Brian Fox"), \
+  proper_name ("Chet Ramey")
+ 
+/* If true, interpret backslash escapes by default.  */
+#ifndef DEFAULT_ECHO_TO_XPG
+enum { DEFAULT_ECHO_TO_XPG = false };
+#endif
+ 
+void
+usage (int status)
+{
+  if (status != EXIT_SUCCESS)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+             program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [SHORT-OPTION]... [STRING]...\n\
+  or:  %s LONG-OPTION\n\
+"), program_name, program_name);
+      fputs (_("\
+Echo the STRING(s) to standard output.\n\
+\n\
+  -n             do not output the trailing newline\n\
+"), stdout);
+      fputs (_(DEFAULT_ECHO_TO_XPG
+               ? N_("\
+  -e             enable interpretation of backslash escapes (default)\n\
+  -E             disable interpretation of backslash escapes\n")
+               : N_("\
+  -e             enable interpretation of backslash escapes\n\
+  -E             disable interpretation of backslash escapes (default)\n")),
+             stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
+\n\
+If -e is in effect, the following sequences are recognized:\n\
+\n\
+"), stdout);
+      fputs (_("\
+  \\\\      backslash\n\
+  \\a      alert (BEL)\n\
+  \\b      backspace\n\
+  \\c      produce no further output\n\
+  \\e      escape\n\
+  \\f      form feed\n\
+  \\n      new line\n\
+  \\r      carriage return\n\
+  \\t      horizontal tab\n\
+  \\v      vertical tab\n\
+"), stdout);
+      fputs (_("\
+  \\0NNN   byte with octal value NNN (1 to 3 digits)\n\
+  \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
+"), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
+      emit_ancillary_info ();
+    }
+  exit (status);
+}
+ 
+/* Convert C from hexadecimal character to integer.  */
+static int
+hextobin (unsigned char c)
+{
+  switch (c)
+    {
+    default: return c - '0';
+    case 'a': case 'A': return 10;
+    case 'b': case 'B': return 11;
+    case 'c': case 'C': return 12;
+    case 'd': case 'D': return 13;
+    case 'e': case 'E': return 14;
+    case 'f': case 'F': return 15;
+    }
+}
+ 
+/* Print the words in LIST to standard output.  If the first word is
+   `-n', then don't print a trailing newline.  We also support the
+   echo syntax from Version 9 unix systems. */
+ 
+int
+main (int argc, char **argv)
+{
+  bool display_return = true;
+  bool allow_options =
+    (! getenv ("POSIXLY_CORRECT")
+     || (! DEFAULT_ECHO_TO_XPG && 1 < argc && STREQ (argv[1], "-n")));
+ 
+  /* System V machines already have a /bin/sh with a v9 behavior.
+     Use the identical behavior for these machines so that the
+     existing system shell scripts won't barf.  */
+  bool do_v9 = DEFAULT_ECHO_TO_XPG;
+ 
+  initialize_main (&argc, &argv);
+  set_program_name (argv[0]);
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+ 
+  atexit (close_stdout);
+ 
+  /* We directly parse options, rather than use parse_long_options, in
+     order to avoid accepting abbreviations.  */
+  if (allow_options && argc == 2)
+    {
+      if (STREQ (argv[1], "--help"))
+        usage (EXIT_SUCCESS);
+ 
+      if (STREQ (argv[1], "--version"))
+        {
+          version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+                       (char *) NULL);
+          exit (EXIT_SUCCESS);
+        }
+    }
+ 
+  --argc;
+  ++argv;
+ 
+  if (allow_options)
+    while (argc > 0 && *argv[0] == '-')
+      {
+        char const *temp = argv[0] + 1;
+        size_t i;
+ 
+        /* If it appears that we are handling options, then make sure that
+           all of the options specified are actually valid.  Otherwise, the
+           string should just be echoed.  */
+ 
+        for (i = 0; temp[i]; i++)
+          switch (temp[i])
+            {
+            case 'e': case 'E': case 'n':
+              break;
+            default:
+              goto just_echo;
+            }
+ 
+        if (i == 0)
+          goto just_echo;
+ 
+        /* All of the options in TEMP are valid options to ECHO.
+           Handle them. */
+        while (*temp)
+          switch (*temp++)
+            {
+            case 'e':
+              do_v9 = true;
+              break;
+ 
+            case 'E':
+              do_v9 = false;
+              break;
+ 
+            case 'n':
+              display_return = false;
+              break;
+            }
+ 
+        argc--;
+        argv++;
+      }
+ 
+just_echo:
+ 
+  if (do_v9)
+    {
+      while (argc > 0)
+        {
+          char const *s = argv[0];
+          unsigned char c;
+ 
+          while ((c = *s++))
+            {
+              if (c == '\\' && *s)
+                {
+                  switch (c = *s++)
+                    {
+                    case 'a': c = '\a'; break;
+                    case 'b': c = '\b'; break;
+                    case 'c': exit (EXIT_SUCCESS);
+                    case 'e': c = '\x1B'; break;
+                    case 'f': c = '\f'; break;
+                    case 'n': c = '\n'; break;
+                    case 'r': c = '\r'; break;
+                    case 't': c = '\t'; break;
+                    case 'v': c = '\v'; break;
+                    case 'x':
+                      {
+                        unsigned char ch = *s;
+                        if (! isxdigit (ch))
+                          goto not_an_escape;
+                        s++;
+                        c = hextobin (ch);
+                        ch = *s;
+                        if (isxdigit (ch))
+                          {
+                            s++;
+                            c = c * 16 + hextobin (ch);
+                          }
+                      }
+                      break;
+                    case '0':
+                      c = 0;
+                      if (! ('0' <= *s && *s <= '7'))
+                        break;
+                      c = *s++;
+                      /* Fall through.  */
+                    case '1': case '2': case '3':
+                    case '4': case '5': case '6': case '7':
+                      c -= '0';
+                      if ('0' <= *s && *s <= '7')
+                        c = c * 8 + (*s++ - '0');
+                      if ('0' <= *s && *s <= '7')
+                        c = c * 8 + (*s++ - '0');
+                      break;
+                    case '\\': break;
+ 
+                    not_an_escape:
+                    default:  putchar ('\\'); break;
+                    }
+                }
+              putchar (c);
+            }
+          argc--;
+          argv++;
+          if (argc > 0)
+            putchar (' ');
+        }
+    }
+  else
+    {
+      while (argc > 0)
+        {
+          fputs (argv[0], stdout);
+          argc--;
+          argv++;
+          if (argc > 0)
+            putchar (' ');
+        }
+    }
+ 
+  if (display_return)
+    putchar ('\n');
+  exit (EXIT_SUCCESS);
+}
+```
+
+As we move from one to another system complexity grows fast. It show not that there is needed features but flows in whole architecture of system. Why there should be more complexity than it's needed?
+
+
+
+
