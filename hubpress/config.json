@@ -5,6 +5,9 @@
     "branch": "gh-pages",
     "cname":"dev.arseniuss.id.lv"
   },
+  "site" : {
+    "url":"http://dev.arseniuss.id.lv"
+  },
   "theme": {
     "name": "Casper"
   }
