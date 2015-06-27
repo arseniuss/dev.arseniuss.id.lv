@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Linux and GNU is gone wrong</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//dev.arseniuss.id.lv/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//dev.arseniuss.id.lv/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html" />
+    
+    <meta property="og:site_name" content="Arsenius&#x27;s development blog" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Linux and GNU is gone wrong" />
+    <meta property="og:description" content="In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use. Kernel development is the thing I&amp;#8217;m interested..." />
+    <meta property="og:url" content="http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html" />
+    <meta property="article:published_time" content="2015-06-26T21:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-06-27T20:37:51.200Z" />
+    <meta property="article:tag" content="Linux" />
+    <meta property="article:tag" content="GNU" />
+    <meta property="article:tag" content="UNIX" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Linux and GNU is gone wrong" />
+    <meta name="twitter:description" content="In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use. Kernel development is the thing I&amp;#8217;m interested..." />
+    <meta name="twitter:url" content="http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Arsenius&#x27;s development blog",
+    "author": {
+        "@type": "Person",
+        "name": "Armands Arseniuss Skolmeisters",
+        "image": "https://avatars.githubusercontent.com/u/707285?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://arseniuss.id.lv"
+    },
+    "headline": "Linux and GNU is gone wrong",
+    "url": "http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html",
+    "datePublished": "2015-06-26T21:00:00.000Z",
+    "dateModified": "2015-06-27T20:37:51.200Z",
+    "keywords": "Linux,  GNU,  UNIX",
+    "description": "In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use. Kernel development is the thing I&amp;#8217;m interested..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="Arsenius&#x27;s development blog" href="http://dev.arseniuss.id.lv/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-Linux tag-GNU tag-UNIX">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="http://dev.arseniuss.id.lv">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="http://dev.arseniuss.id.lv/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-Linux tag-GNU tag-UNIX">
+
+        <header class="post-header">
+            <h1 class="post-title">Linux and GNU is gone wrong</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-06-27">27 June 2015</time>  on <a href="http://dev.arseniuss.id.lv/tag/Linux">Linux</a>, <a href="http://dev.arseniuss.id.lv/tag/GNU"> GNU</a>, <a href="http://dev.arseniuss.id.lv/tag/UNIX"> UNIX</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="paragraph">
+<p>In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use.</p>
+</div>
+<div class="paragraph">
+<p>Kernel development is the thing I&#8217;m interested in. I have dedicated almost all my free time for that. And even at work when my project compiling I catch myself reading osdev.org forums and laughing at discussions about cats. But since I got more understanding of operating system architecture in past  5 years I take it seriously. It&#8217;s a core of system which we use and we will use. What could be more important than that?</p>
+</div>
+<div class="paragraph">
+<p>Long way ago before I was even born Unix founders had an idea to build system that could be easy to use, easy to maintain and also easy to read. It was build into philosophy now known as Unix philosophy that defined foundations of system that could not only do needed job but also could be easy understandable. Making the system that could be elegant not only for developer but also for user.</p>
+</div>
+<div class="paragraph">
+<p>Now it&#8217;s 2015 - long way after UNIX. Now there is GNU, Linux, BSD and many other projects which have initially emerged from UNIX and it&#8217;s founders. What have happened in these years?</p>
+</div>
+<div class="paragraph">
+<p>GNU have a really good bunch of tools. It have played main role for many years and have done its role well. But! Where did it go? Despite being good project it have grown with <em>moss</em>. Now its code is unreadable! OK, you can say - GNU is Not UNIX! - but its kinda is. It provides layer above kernel. That&#8217;s as important as kernel itself. Shouldn&#8217;t it follow good practice principles recommended by UNIX philosophy?</p>
+</div>
+<div class="paragraph">
+<p>I know that there is need for supporting a lot of features, options and hardware. But I can&#8217;t agree that this is the way to do that. We have big blob of code which is either readable and either simple to use. I have mastered gcc options only recently and yet I think that a lot of that that should be put in code not in compiler options.</p>
+</div>
+<div class="paragraph">
+<p>Linux (Linus Unix) is a big blob too. It by definition should keep itself changing. If there was one inner interface for drivers it would fail reason to exist. It is - to keep hardware code open source. It&#8217;s written in licence and it&#8217;s defines kernel as such. It&#8217;s not a bad idea for sake of surviving but it&#8217;s bad idea for maintaining and building better systems. There is even discussions about when will Linux code reach such a complexity that human could not comprehend it.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re not convince yet that there is a problem in those systems, I will show you example of simple command tool named <em>echo</em>. It purpose just to place string into terminal.</p>
+</div>
+<div class="paragraph">
+<p>In UNIX Fifth Edition</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">main(argc, argv)
+int argc;
+char *argv[];
+{
+	int i;
+
+	argc--;
+	for(i=1; i&lt;=argc; i++)
+		printf("%s%c", argv[i], i==argc? '\n': ' ');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In OpenBSD</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">/*	$OpenBSD: echo.c,v 1.7 2009/10/27 23:59:21 deraadt Exp $	*/
+/*	$NetBSD: echo.c,v 1.6 1995/03/21 09:04:27 cgd Exp $	*/
+
+/*
+ * Copyright (c) 1989, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* ARGSUSED */
+int
+main(int argc, char *argv[])
+{
+	int nflag;
+
+	/* This utility may NOT do getopt(3) option parsing. */
+	if (*++argv &amp;&amp; !strcmp(*argv, "-n")) {
+		++argv;
+		nflag = 1;
+	}
+	else
+		nflag = 0;
+
+	while (*argv) {
+		(void)fputs(*argv, stdout);
+		if (*++argv)
+			putchar(' ');
+	}
+	if (!nflag)
+		putchar('\n');
+
+	return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Plan9</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">#include &lt;u.h&gt;
+#include &lt;libc.h&gt;
+
+void
+main(int argc, char *argv[])
+{
+	int nflag;
+	int i, len;
+	char *buf, *p;
+
+	nflag = 0;
+	if(argc &gt; 1 &amp;&amp; strcmp(argv[1], "-n") == 0)
+		nflag = 1;
+
+	len = 1;
+	for(i = 1+nflag; i &lt; argc; i++)
+		len += strlen(argv[i])+1;
+
+	buf = malloc(len);
+	if(buf == 0)
+		exits("no memory");
+
+	p = buf;
+	for(i = 1+nflag; i &lt; argc; i++){
+		strcpy(p, argv[i]);
+		p += strlen(p);
+		if(i &lt; argc-1)
+			*p++ = ' ';
+	}
+
+	if(!nflag)
+		*p++ = '\n';
+
+	if(write(1, buf, p-buf) &lt; 0){
+		fprint(2, "echo: write error: %r\n");
+		exits("write error");
+	}
+
+	exits((char *)0);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In FreeBSD</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">/*-
+ * Copyright (c) 1989, 1993
+ *      The Regents of the University of California.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 4. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+#if 0
+#ifndef lint
+static char const copyright[] =
+"@(#) Copyright (c) 1989, 1993\n\
+        The Regents of the University of California.  All rights reserved.\n";
+#endif /* not lint */
+
+#ifndef lint
+static char sccsid[] = "@(#)echo.c      8.1 (Berkeley) 5/31/93";
+#endif /* not lint */
+#endif
+#include &lt;sys/cdefs.h&gt;
+__FBSDID("$FreeBSD$");
+
+#include &lt;sys/types.h&gt;
+#include &lt;sys/uio.h&gt;
+
+#include &lt;assert.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+
+/*
+ * Report an error and exit.
+ * Use it instead of err(3) to avoid linking-in stdio.
+ */
+static __dead2 void
+errexit(const char *prog, const char *reason)
+{
+        char *errstr = strerror(errno);
+        write(STDERR_FILENO, prog, strlen(prog));
+        write(STDERR_FILENO, ": ", 2);
+        write(STDERR_FILENO, reason, strlen(reason));
+        write(STDERR_FILENO, ": ", 2);
+        write(STDERR_FILENO, errstr, strlen(errstr));
+        write(STDERR_FILENO, "\n", 1);
+        exit(1);
+}
+
+int
+main(int argc, char *argv[])
+{
+        int nflag;      /* if not set, output a trailing newline. */
+        int veclen;     /* number of writev arguments. */
+        struct iovec *iov, *vp; /* Elements to write, current element. */
+        char space[] = " ";
+        char newline[] = "\n";
+        char *progname = argv[0];
+
+        /* This utility may NOT do getopt(3) option parsing. */
+        if (*++argv &amp;&amp; !strcmp(*argv, "-n")) {
+                ++argv;
+                --argc;
+                nflag = 1;
+        } else
+                nflag = 0;
+
+        veclen = (argc &gt;= 2) ? (argc - 2) * 2 + 1 : 0;
+
+        if ((vp = iov = malloc((veclen + 1) * sizeof(struct iovec))) == NULL)
+                errexit(progname, "malloc");
+
+        while (argv[0] != NULL) {
+                size_t len;
+
+                len = strlen(argv[0]);
+
+                /*
+                 * If the next argument is NULL then this is this
+                 * the last argument, therefore we need to check
+                 * for a trailing \c.
+                 */
+                if (argv[1] == NULL) {
+                        /* is there room for a '\c' and is there one? */
+                        if (len &gt;= 2 &amp;&amp;
+                            argv[0][len - 2] == '\\' &amp;&amp;
+                            argv[0][len - 1] == 'c') {
+                                /* chop it and set the no-newline flag. */
+                                len -= 2;
+                                nflag = 1;
+                        }
+                }
+                vp-&gt;iov_base = *argv;
+                vp++-&gt;iov_len = len;
+                if (*++argv) {
+                        vp-&gt;iov_base = space;
+                        vp++-&gt;iov_len = 1;
+                }
+        }
+        if (!nflag) {
+                veclen++;
+                vp-&gt;iov_base = newline;
+                vp++-&gt;iov_len = 1;
+        }
+        /* assert(veclen == (vp - iov)); */
+        while (veclen) {
+                int nwrite;
+
+                nwrite = (veclen &gt; IOV_MAX) ? IOV_MAX : veclen;
+                if (writev(STDOUT_FILENO, iov, nwrite) == -1)
+                        errexit(progname, "write");
+                iov += nwrite;
+                veclen -= nwrite;
+        }
+        return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In GNU coreutils</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">/* echo.c, derived from code echo.c in Bash.
+   Copyright (C) 1987, 1989, 1991-1997, 1999-2005, 2007-2011 Free Software
+   Foundation, Inc.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.  */
+
+#include &lt;config.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include "system.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "echo"
+
+#define AUTHORS \
+  proper_name ("Brian Fox"), \
+  proper_name ("Chet Ramey")
+
+/* If true, interpret backslash escapes by default.  */
+#ifndef DEFAULT_ECHO_TO_XPG
+enum { DEFAULT_ECHO_TO_XPG = false };
+#endif
+
+void
+usage (int status)
+{
+  if (status != EXIT_SUCCESS)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+             program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [SHORT-OPTION]... [STRING]...\n\
+  or:  %s LONG-OPTION\n\
+"), program_name, program_name);
+      fputs (_("\
+Echo the STRING(s) to standard output.\n\
+\n\
+  -n             do not output the trailing newline\n\
+"), stdout);
+      fputs (_(DEFAULT_ECHO_TO_XPG
+               ? N_("\
+  -e             enable interpretation of backslash escapes (default)\n\
+  -E             disable interpretation of backslash escapes\n")
+               : N_("\
+  -e             enable interpretation of backslash escapes\n\
+  -E             disable interpretation of backslash escapes (default)\n")),
+             stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
+\n\
+If -e is in effect, the following sequences are recognized:\n\
+\n\
+"), stdout);
+      fputs (_("\
+  \\\\      backslash\n\
+  \\a      alert (BEL)\n\
+  \\b      backspace\n\
+  \\c      produce no further output\n\
+  \\e      escape\n\
+  \\f      form feed\n\
+  \\n      new line\n\
+  \\r      carriage return\n\
+  \\t      horizontal tab\n\
+  \\v      vertical tab\n\
+"), stdout);
+      fputs (_("\
+  \\0NNN   byte with octal value NNN (1 to 3 digits)\n\
+  \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
+"), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
+      emit_ancillary_info ();
+    }
+  exit (status);
+}
+
+/* Convert C from hexadecimal character to integer.  */
+static int
+hextobin (unsigned char c)
+{
+  switch (c)
+    {
+    default: return c - '0';
+    case 'a': case 'A': return 10;
+    case 'b': case 'B': return 11;
+    case 'c': case 'C': return 12;
+    case 'd': case 'D': return 13;
+    case 'e': case 'E': return 14;
+    case 'f': case 'F': return 15;
+    }
+}
+
+/* Print the words in LIST to standard output.  If the first word is
+   `-n', then don't print a trailing newline.  We also support the
+   echo syntax from Version 9 unix systems. */
+
+int
+main (int argc, char **argv)
+{
+  bool display_return = true;
+  bool allow_options =
+    (! getenv ("POSIXLY_CORRECT")
+     || (! DEFAULT_ECHO_TO_XPG &amp;&amp; 1 &lt; argc &amp;&amp; STREQ (argv[1], "-n")));
+
+  /* System V machines already have a /bin/sh with a v9 behavior.
+     Use the identical behavior for these machines so that the
+     existing system shell scripts won't barf.  */
+  bool do_v9 = DEFAULT_ECHO_TO_XPG;
+
+  initialize_main (&amp;argc, &amp;argv);
+  set_program_name (argv[0]);
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
+  atexit (close_stdout);
+
+  /* We directly parse options, rather than use parse_long_options, in
+     order to avoid accepting abbreviations.  */
+  if (allow_options &amp;&amp; argc == 2)
+    {
+      if (STREQ (argv[1], "--help"))
+        usage (EXIT_SUCCESS);
+
+      if (STREQ (argv[1], "--version"))
+        {
+          version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+                       (char *) NULL);
+          exit (EXIT_SUCCESS);
+        }
+    }
+
+  --argc;
+  ++argv;
+
+  if (allow_options)
+    while (argc &gt; 0 &amp;&amp; *argv[0] == '-')
+      {
+        char const *temp = argv[0] + 1;
+        size_t i;
+
+        /* If it appears that we are handling options, then make sure that
+           all of the options specified are actually valid.  Otherwise, the
+           string should just be echoed.  */
+
+        for (i = 0; temp[i]; i++)
+          switch (temp[i])
+            {
+            case 'e': case 'E': case 'n':
+              break;
+            default:
+              goto just_echo;
+            }
+
+        if (i == 0)
+          goto just_echo;
+
+        /* All of the options in TEMP are valid options to ECHO.
+           Handle them. */
+        while (*temp)
+          switch (*temp++)
+            {
+            case 'e':
+              do_v9 = true;
+              break;
+
+            case 'E':
+              do_v9 = false;
+              break;
+
+            case 'n':
+              display_return = false;
+              break;
+            }
+
+        argc--;
+        argv++;
+      }
+
+just_echo:
+
+  if (do_v9)
+    {
+      while (argc &gt; 0)
+        {
+          char const *s = argv[0];
+          unsigned char c;
+
+          while ((c = *s++))
+            {
+              if (c == '\\' &amp;&amp; *s)
+                {
+                  switch (c = *s++)
+                    {
+                    case 'a': c = '\a'; break;
+                    case 'b': c = '\b'; break;
+                    case 'c': exit (EXIT_SUCCESS);
+                    case 'e': c = '\x1B'; break;
+                    case 'f': c = '\f'; break;
+                    case 'n': c = '\n'; break;
+                    case 'r': c = '\r'; break;
+                    case 't': c = '\t'; break;
+                    case 'v': c = '\v'; break;
+                    case 'x':
+                      {
+                        unsigned char ch = *s;
+                        if (! isxdigit (ch))
+                          goto not_an_escape;
+                        s++;
+                        c = hextobin (ch);
+                        ch = *s;
+                        if (isxdigit (ch))
+                          {
+                            s++;
+                            c = c * 16 + hextobin (ch);
+                          }
+                      }
+                      break;
+                    case '0':
+                      c = 0;
+                      if (! ('0' &lt;= *s &amp;&amp; *s &lt;= '7'))
+                        break;
+                      c = *s++;
+                      /* Fall through.  */
+                    case '1': case '2': case '3':
+                    case '4': case '5': case '6': case '7':
+                      c -= '0';
+                      if ('0' &lt;= *s &amp;&amp; *s &lt;= '7')
+                        c = c * 8 + (*s++ - '0');
+                      if ('0' &lt;= *s &amp;&amp; *s &lt;= '7')
+                        c = c * 8 + (*s++ - '0');
+                      break;
+                    case '\\': break;
+
+                    not_an_escape:
+                    default:  putchar ('\\'); break;
+                    }
+                }
+              putchar (c);
+            }
+          argc--;
+          argv++;
+          if (argc &gt; 0)
+            putchar (' ');
+        }
+    }
+  else
+    {
+      while (argc &gt; 0)
+        {
+          fputs (argv[0], stdout);
+          argc--;
+          argv++;
+          if (argc &gt; 0)
+            putchar (' ');
+        }
+    }
+
+  if (display_return)
+    putchar ('\n');
+  exit (EXIT_SUCCESS);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we move from one to another system complexity grows fast. It show not that there is needed features but flows in whole architecture of system. Why there should be more complexity than it&#8217;s needed?</p>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/707285?v=3)"><span class="hidden">Armands Arseniuss Skolmeisters's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">Armands Arseniuss Skolmeisters</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Latvia, Riga</span>
+                    <span class="author-link icon-link"><a href="http://arseniuss.id.lv">http://arseniuss.id.lv</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=Linux%20and%20GNU%20is%20gone%20wrong&amp;url=http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://dev.arseniuss.id.lv/2015/06/27/Linux-and-GNU-is-gone-wrong.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+        <section class="post-comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+          var disqus_shortname = 'arseniuss'; // required: replace example with your forum shortname
+          /* * * DON'T EDIT BELOW THIS LINE * * */
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </section>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="http://dev.arseniuss.id.lv">Arsenius&#x27;s development blog</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//dev.arseniuss.id.lv/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//dev.arseniuss.id.lv/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
