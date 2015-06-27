@@ -1,0 +1,7 @@
+# Linux and GNU is gone wrong
+
+In a good mood of LAKA (Latvian Association of Open Source) gathering I wanted to express my doubt about the systems which most of us (free and open software developers) use.
+
+Kernel development is the thing I'm interested in. I have delicated almost all my free time for that. And even at work when my project compiling I catch myself reading osdev.org forums and laughing at discussions about cats.
+
+But since I got more understanding of operating system architecture in last past 5 years I take that seriously. 
