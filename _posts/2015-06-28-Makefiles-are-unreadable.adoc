@@ -1,0 +1,82 @@
+# Makefiles are unreadable
+
+Since I got need for makefiles in _flos_ project I notice that thay are unreadable. There is a lot of options which meaning I had to look into documentation and even then I forget what they mean.
+
+Than I steped on Plan9 mk. It's not ideal but I seemed to look much better than tipical GNU makefiles. Unfortunately I couldn't find easy way to use it for my own projects. So I decited to rewrite some of it's parts for my own hobby project.
+
+I have plan to use my own mk for _flos_ operating system. It of course requires time to write code and build mk program but I think for hunger to code it would be enough.
+
+Actually I don't want to reinvent how mk works. I want to redefine how mkfiles look for developer.
+
+### variable declaration
+
+```
+CC=gcc
+```
+
+As we see there is no big diffrence in variable declaration in my mkfile format. Only whitespace is not required around `=` symbol.
+
+### file including
+
+```
+include /$arch/mkfile
+```
+### Recipies
+```
+all (virtual):
+	
+```
+
+```
+clean (virtual, quit):
+	$rm *.o
+```
+
+### Default variables
+
+$target, $targets, $prereq, $prereqs, $procs, $proc, $pid
+
+### Libraries
+
+```
+$lib/f.o (virtual, quit):
+```
+
+### Recepy variables
+
+```
+BIN=/$arch/bin
+PROG=foo
+
+%{foo}: %{foo}.c
+	$cc $prereq -o ${foo}.o # also $cc $prereq -o $target
+    $ld -o $target $preq
+    
+install (virtual): $BIN/$PROG
+
+$BIN/%{prog}: %{prog}
+	mv $preq $target
+
+```
+
+ignores that source and object files is up to date
+
+```
+rebuild (rebuild): all
+```
+
+```
+f (compare=`cmp -s`):
+```
+
+```
+config workers=4
+```
+
+```
+pic.out (on success):
+```
+
+```
+
+
