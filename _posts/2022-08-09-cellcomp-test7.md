@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "cellcomp: Notes from `test7.cell` in cell compiler development"
+disqus: true
 ---
 
 The `test7.cell` includes multiple aspects of the language.

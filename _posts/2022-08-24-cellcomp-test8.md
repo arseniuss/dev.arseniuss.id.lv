@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "cellcomp: Notes from `test8.cell` in cell compiler development"
+disqus: true
 ---
 
 I had an idea to allow multiple types of operators. Not only the known C operators like `%%` and `&&` but any combination of operator characters, ex. `!$%^&*` etc.
